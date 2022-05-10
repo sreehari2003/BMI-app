@@ -61,9 +61,37 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  int _value = 6;
-  var male = false;
-  var female = false;
+  void addVal(changeVal val) {
+    if (val == changeVal.addAge) {
+      setState(() {
+        _age++;
+      });
+    } else if (val == changeVal.removeAge) {
+      setState(() {
+        _age--;
+      });
+    } else if (val == changeVal.addWeight) {
+      setState(() {
+        _wieght++;
+      });
+    } else {
+      setState(() {
+        _wieght--;
+      });
+    }
+  }
+
+  void reduceVal(int val) {
+    setState(() {
+      val = val - 1;
+    });
+  }
+
+  int _value = 110;
+  bool male = false;
+  bool female = false;
+  var _wieght = 20;
+  var _age = 18;
 
   var activeColor = const Color(0xFF1D1E33);
   var activeFemale = const Color(0xFF1D1E33);
@@ -167,17 +195,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  Slider(
-                    min: 0,
-                    max: 100,
-                    value: _value.toDouble(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _value = value.round();
-                      });
-                    },
-                    inactiveColor: Colors.grey,
-                    activeColor: Colors.red,
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                        thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 15)),
+                    child: Slider(
+                      min: 100,
+                      max: 200,
+                      value: _value.toDouble(),
+                      onChanged: (double value) {
+                        setState(() {
+                          _value = value.round();
+                        });
+                      },
+                      inactiveColor: Colors.grey,
+                      activeColor: Colors.red,
+                    ),
                   )
                 ],
               ),
@@ -190,15 +223,45 @@ class _HomeScreenState extends State<HomeScreen> {
                     margin: 15,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           "Weight",
                           style: TextStyle(color: Colors.white, fontSize: 30),
                         ),
                         Text(
-                          "74",
-                          style: TextStyle(color: Colors.white, fontSize: 30),
-                        )
+                          _wieght.toString(),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 30),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.black,
+                              ),
+                              onPressed: () => addVal(changeVal.addWeight),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.grey,
+                                shape: const CircleBorder(),
+                                padding: const EdgeInsets.all(10),
+                              ),
+                            ),
+                            ElevatedButton(
+                              child: const Icon(
+                                Icons.remove,
+                                color: Colors.black,
+                              ),
+                              onPressed: () => addVal(changeVal.removeWeight),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.grey,
+                                shape: const CircleBorder(),
+                                padding: const EdgeInsets.all(10),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     )),
                 Boxes(
@@ -207,15 +270,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   margin: 15,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "Age",
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                       Text(
-                        "18",
-                        style: TextStyle(color: Colors.white, fontSize: 30),
-                      )
+                        _age.toString(),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 30),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.black,
+                            ),
+                            onPressed: () => addVal(changeVal.addAge),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.grey,
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(10),
+                            ),
+                          ),
+                          ElevatedButton(
+                            child: const Icon(
+                              Icons.remove,
+                              color: Colors.black,
+                            ),
+                            onPressed: () => addVal(changeVal.removeAge),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.grey,
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(10),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 )
@@ -247,4 +340,10 @@ class _HomeScreenState extends State<HomeScreen> {
 enum Users {
   male,
   female,
+}
+enum changeVal {
+  addWeight,
+  removeWeight,
+  addAge,
+  removeAge,
 }
