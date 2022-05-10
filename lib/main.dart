@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import "./components/containers.dart";
+import "./pages/result.dart";
 
 void main() {
   runApp(const Calculator());
@@ -16,7 +19,14 @@ class Calculator extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF0a0E21),
         textTheme: const TextTheme(),
       ),
-      home: const HomeScreen(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const HomeScreen(),
+        "/results": (context) => const Results(
+              bmi: "1",
+              results: "you are good",
+            )
+      },
     );
   }
 }
@@ -87,12 +97,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+//all variables
+  var bmi = "22";
+  var res = "18";
   int _value = 110;
   bool male = false;
   bool female = false;
   var _wieght = 20;
   var _age = 18;
-
   var activeColor = const Color(0xFF1D1E33);
   var activeFemale = const Color(0xFF1D1E33);
   @override
@@ -321,7 +333,19 @@ class _HomeScreenState extends State<HomeScreen> {
               margin: 1,
               color: Colors.red,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    bmi = Calculate(height: _value, weight: _wieght)
+                        .calculateBMI();
+                    res =
+                        Calculate(height: _value, weight: _wieght).getResult();
+                  });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Results(bmi: bmi, results: res)),
+                  );
+                },
                 child: const Center(
                   child: Text(
                     "Calculate Your BMI",
@@ -346,4 +370,25 @@ enum changeVal {
   removeWeight,
   addAge,
   removeAge,
+}
+
+class Calculate {
+  Calculate({required this.weight, required this.height});
+  final int weight;
+  final int height;
+  String calculateBMI() {
+    double bmi = weight / pow(height / 100, 2);
+    return bmi.toStringAsFixed(1);
+  }
+
+  String getResult() {
+    double bmi = weight / pow(height / 100, 2);
+    if (bmi >= 25) {
+      return "Overweight";
+    } else if (bmi > 18.5) {
+      return "Normal";
+    } else {
+      return "UnderWeight";
+    }
+  }
 }
